@@ -1,0 +1,1673 @@
+//Wakey
+
+#include <Adafruit_GFX.h>
+#include <Adafruit_PCD8544.h> //display
+
+#include <Keypad.h> //keyboard
+#include <TimerOne.h>
+#include <DS3231.h> //RTC
+//#include "RTClib.h" // RTC time update
+Time t;
+#define buz1 A1
+#define buz2 A2
+//RTC_DS3231 rtc;  //RTC config uncomment to update time
+
+int i=0;
+
+String keypress = "";
+String keypress1 = "";
+
+String RealTime ;
+const byte ROWS = 5; //four rows
+const byte COLS = 4; //three columns
+char keyss[ROWS][COLS] = {
+  {'F','G','#','*'},
+  {'1','2','3','U'},
+  {'4','5','6','D'},
+  {'7','8','9','X'},
+  {'L','0','R','E'}
+};
+
+byte rowPins[ROWS] = {0, A5, 2, 6, A4}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {8, 9, A3, A0}; //connect to the column pinouts of the keypad
+
+int count1=0;
+int count2=0;
+int count3=0;
+int count4=0;
+int count5=0;
+int count6=0;
+
+
+
+Keypad keypads = Keypad( makeKeymap(keyss), rowPins, colPins, ROWS, COLS );
+
+DS3231  rtc(SDA, SCL);  // define RTC
+
+int menuitem = 1;
+int frame = 1;
+int frame1 = 1;
+int framev1 = 1;
+int page = 1;
+int lastMenuItem = 1;
+int submenuitem = 1;
+int lastSubItem = 1;
+int lastSubItemv =1;
+
+String menuItem1 = "Device Info";   // Menu items
+String menuItem2 = "Date";
+String menuItem3 = "Time";
+String menuItem4 = "Reminder";
+String menuItem5 = "Light: ON";
+String menuItem6 = "Reset";
+
+
+String menuItem21 ="View";
+String menuItem22 ="Set";
+String menuItem23 ="Back";
+
+String subItem1 ="Meeting";
+String subItem2 ="Take Medicine";
+String subItem3 ="Meet Doctor";
+String subItem4 ="Buy Groceries";
+String subItem5 ="wake up";
+String subItem6 ="Study";
+
+String subItemv1 ="Meeting";
+String subItemv2 ="Take Medicine";
+String subItemv3 ="Meet Doctor";
+String subItemv4 ="Buy Groceries";
+String subItemv5 ="wake up";
+String subItemv6 ="Study";
+
+int subitem = 1;
+int subitemv = 1;
+int Remitem=1;
+boolean backlight = true;
+int contrast=60;
+
+String todo = "";
+// Dates
+String Date1 = "";
+String Date2 = "";
+String Date3 = "";
+String Date4 = "";
+String Date5 = "";
+String Date6 = "";
+
+//Times
+String Time1 = "";
+String Time2 = "";
+String Time3 = "";
+String Time4 = "";
+String Time5 = "";
+String Time6 = "";
+
+//Final Time
+String FinalTime1 = "";
+String FinalTime2 = "";
+String FinalTime3 = "";
+String FinalTime4 = "";
+String FinalTime5 = "";
+String FinalTime6 = "";
+
+
+String RealDate = "";
+
+String Date = "Date";
+
+String Time = "Time";
+
+String Hor1 = "";
+String Hor2 = "";
+String Hor3 = "";
+String Hor4 = "";
+String Hor5 = "";
+String Hor6 = "";
+
+String Min1 = "";
+String Min2 = "";
+String Min3 = "";
+String Min4 = "";
+String Min5 = "";
+String Min6 = "";
+
+
+String Reminder[3] = { "View","Set","Back" };
+int selectedReminder = 0;
+
+boolean up = false;
+boolean down = false;
+boolean middle = false;
+
+//ClickEncoder *encoder;
+int16_t last, value;
+
+Adafruit_PCD8544 display = Adafruit_PCD8544( 13, 11, 5, 4, 3); //Download the latest Adafruit Library in order to use this constructor
+
+int Hor, Min;
+String h1 ,m1,h2 ,m2,h3 ,m3,h4 ,m4,h5 ,m5,h6 ,m6;
+
+
+void setup() {
+
+  rtc.begin();  //Begin Rtc
+  Serial.begin(9600);
+
+  pinMode(7,OUTPUT);   //Backlight pin
+  pinMode(buz1, OUTPUT);
+  pinMode(buz2, OUTPUT);
+  turnBacklightOn();
+  
+ // encoder = new ClickEncoder(A1, A0, A2);
+  //encoder->setAccelerationEnabled(false);
+   
+  display.begin();      
+  display.clearDisplay(); 
+//  setContrast();  
+
+  Timer1.initialize(1000);
+  Timer1.attachInterrupt(timerIsr); 
+  
+  //last = encoder->getValue();
+  digitalWrite(buz1,HIGH);
+  digitalWrite(buz2,HIGH);
+  Welcome();
+
+  
+}
+
+void loop() {
+     
+    t = rtc.getTime();
+    Hor = t.hour;
+    Min = t.min;
+    RealDate = rtc.getDateStr();
+    RealTime = rtc.getTimeStr();
+    
+     
+      if (Min <10) {
+      Min1= "0" + String(Min) ;;
+      }
+   if (RealTime == Time1 && RealDate == Date1 ){
+    count1=0;
+     
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("Meeeting");
+     display.display();
+     delay(3000);
+    
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time1="";
+     Date1 = "";
+     h1 = "";
+     m1 = "";  
+    }
+    }
+5e2 ){
+    count2=0;
+     delay(700);
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("Take Medicine");
+     display.display();
+     delay(4000);
+    
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time2="";
+     Date2 = "";
+     h2 = "";
+     m2 = "";
+      
+    }
+    }
+
+    if (RealTime== Time3 && RealDate == Date3 ){
+    count3=0;
+     delay(700);
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("Meet Doctor");
+     display.display();
+     delay(4000);
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time3="";
+     Date3 = "";
+     h3 = "";
+     m3 = "";  
+    }
+    }
+
+    if (RealTime == Time4 && RealDate == Date4 ){
+    count4=0;
+     delay(700);
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("Buy Groceries");
+     display.display();
+     delay(4000);
+    
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time4="";
+     Date4 = "";
+     h4 = "";
+     m4 = "";  
+    }
+    }
+
+    if (RealTime == Time5 && RealDate == Date5 ){
+    count5=0;
+     delay(700);
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("wake up");
+     display.display();
+     delay(4000);
+    
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time5="";
+     Date5 = "";
+     h5 = "";
+     m5 = "";  
+    }
+    }
+
+    if (RealTime == Time6&& RealDate == Date6 ){
+    count6=0;
+     delay(700);
+     digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+     digitalWrite(7,HIGH);
+     //Serial.println(RealTime);
+     display.clearDisplay();
+     display.setCursor(15, 0);
+     display.print("Study");
+     display.display();
+     delay(4000);
+    
+    char key = keypads.getKey();
+     if (key == '*'){
+     Time6="";
+     Date6 = "";
+     h6 = "";
+     m6 = "";  
+    }
+    }
+    
+     char key = keypads.getKey();
+     if (key == '*'){
+     digitalWrite(buz1,HIGH);
+     digitalWrite(buz2,HIGH);
+      
+    }
+  
+
+  drawMenu();
+ 
+ if (key){
+  //Serial.print(key);
+  }
+ if (key=='U'){
+  up=true; }
+  if (key=='F'){
+    delay(700);
+    digitalWrite(buz1,LOW);
+     digitalWrite(buz2,LOW);
+   }
+  if (key=='D'){
+  down=true ;}
+   if (key=='E'){
+  middle=true; }
+  if (key=='X'){
+  page=1; 
+  menuitem = 1;
+  frame=1;
+  }
+  
+
+ 
+
+  // Page 3
+//////////////////////////////////////////////////////////////////
+  if (middle && page ==3 && Remitem==2){
+    i=1;} 
+  if (up && page ==3)
+  { up=false;
+   Remitem--;
+   if (Remitem ==0)
+    {Remitem++;}
+    
+    }
+     if (down && page ==3)
+  { down =false;
+
+    Remitem++;
+    if (Remitem ==4)
+    {Remitem--;}
+    
+    }
+///////////////////////////////////////////////////////////////////
+
+// Page 1
+
+//////////////////////////////////////////////////////////////////
+
+  if (up && page == 1 ) {       //1 up - boolean
+     
+    up = false;
+    if(menuitem==2 && frame ==2)      // menuitem defined as int
+    {
+      frame--;                        //frame shows which part of the menus is displayed , first three options in the menu (frame 1) or something else
+    }
+
+     if(menuitem==4 && frame ==4)
+    {
+      frame--;
+    }
+      if(menuitem==3 && frame ==3)
+    {
+      frame--;
+    }
+    lastMenuItem = menuitem;
+    menuitem--;
+    if (menuitem==0)
+    {
+      menuitem=1;
+    } 
+  }
+
+////////////////////////////////////////////////////////////
+
+//page 2
+
+///////////////////////////////////////////////////////////
+
+  else if (up && page == 2 && menuitem==1 ) {     //2
+    up = false;
+    //contrast--;
+   // setContrast();
+  }
+  //else if (up && page == 2 && menuitem==2 ) {       //3
+   // up = false;
+   // drawMenu();
+  //}
+  //else if (up && page == 2 && menuitem==3 ) {       //4
+    //up = false;
+    //drawMenu() ;
+    //if(selectedLanguage == -1)
+  //  {
+    //  selectedLanguage = 2;
+  //  } 
+  //}
+    else if (up && page == 2 && menuitem==4 ) {     //5
+    up = false;
+    selectedReminder--;
+    if(selectedReminder== -1)
+    {
+      selectedReminder = 1;
+    } 
+  }
+
+  if (down && page == 1) //We have turned the Rotary Encoder Clockwise
+  {
+
+    down = false;
+    if(menuitem==3 && lastMenuItem == 2)
+    {
+      frame ++;
+    }else  if(menuitem==4 && lastMenuItem == 3)
+    {
+      frame ++;
+    }
+     else  if(menuitem==5 && lastMenuItem == 4 && frame!=4)
+    {
+      frame ++;
+    }
+    lastMenuItem = menuitem;
+    menuitem++;  
+    if (menuitem==7) 
+    {
+      menuitem--;
+    }
+  
+  }else if (down && page == 2 && menuitem==1) {
+    down = false;
+    //contrast++;
+   // setContrast();
+  }
+  //else if (down && page == 2 && menuitem==2) {
+    //down = false;
+    //drawMenu();
+  //}
+   //else if (down && page == 2 && menuitem==3 ) {
+    //down = false;
+    //Time1 = "00:01" ;
+    //if(selectedLanguage == 3)
+   // {
+    //  selectedLanguage = 0;
+    //} 
+  //}
+  else if (down && page == 2 && menuitem==4 ) {
+    down = false;
+    selectedReminder++;
+    if(selectedReminder == 2)
+    {
+      selectedReminder = 0;
+    } 
+  }
+
+/////////////////////////////////////////////////////////////////
+
+// page 4
+
+/////////////////////////////////////////////////////////////////
+  else if (up && page == 4 ) {       //1 up - boolean
+     
+    up = false;
+    
+
+    if(subitem==2 && frame1 ==2)      // menuitem defined as int
+    {
+      frame1--;                        //frame shows which part of the menus is displayed , first three options in the menu (frame 1) or something else
+      subitem--;
+    }
+
+     if(subitem==4 && frame1 ==4)
+    {
+      frame1--;
+    }
+      if(subitem==3 && frame1 ==3)
+    {
+      frame1--;
+    }
+    lastSubItem = subitem;
+    subitem--;
+    if (subitem==0)
+    {
+      subitem=1;
+    } 
+  }
+
+  if (down && page == 4) //We have turned the Rotary Encoder Clockwise
+  {
+
+    down = false;
+    if (subitem == 3 && frame1 == 1){
+      frame1++;
+      }
+    if(subitem==3 && lastSubItem == 2)
+    {
+      frame1++;
+    }else  if(subitem==4 && lastSubItem == 3)
+    {
+      frame1++;
+    }
+     else  if(subitem==5 && lastSubItem == 4 && frame1!=4)
+    {
+      frame1++;
+    }
+    lastSubItem = subitem;
+    subitem++;  
+    if (subitem==7) 
+    {
+      subitem--;
+    }
+  
+  }
+
+///////////////////////////////////////////////////////////////////////////
+
+//page 6
+///////////////////////////////////////////////////////////
+
+  else if (up && page == 6 ) {       //1 up - boolean
+     
+    up = false;
+    /*if(subitemv>=2)      // menuitem defined as int
+    {
+      Serial.print ("plusone"); 
+       Serial.print (subitemv);                       //frame shows which part of the menus is displayed , first three options in the menu (frame 1) or something else
+      subitemv--;
+    }*/
+
+    if(subitemv==2 && framev1 ==2)      // menuitem defined as int
+    {
+       
+      framev1--;                        //frame shows which part of the menus is displayed , first three options in the menu (frame 1) or something else
+      subitemv--;
+    }
+
+     if(subitemv==4 && framev1 ==4)
+    {
+      framev1--;
+    }
+      if(subitemv==3 && framev1 ==3)
+    {
+      framev1--;
+    }
+    lastSubItemv = subitemv;
+    subitemv--;
+    if (subitemv==0)
+    {
+      
+      subitemv=1;
+    } 
+  }
+
+  if (down && page == 6) //We have turned the Rotary Encoder Clockwise
+  {
+
+    down = false;
+    if (subitemv == 3 && framev1 == 1){
+      framev1++;
+      }
+    if(subitemv==3 && lastSubItemv == 2)
+    {
+      framev1++;
+    }else  if(subitemv==4 && lastSubItemv == 3)
+    {
+      framev1++;
+    }
+     else  if(subitemv==5 && lastSubItemv == 4 && framev1!=4)
+    {
+      framev1++;
+    }
+    lastSubItemv = subitemv;
+    subitemv++;  
+    if (subitemv==7) 
+    {
+      subitemv--;
+    }
+  
+  }
+
+/////////////////////////////////////////////////////////////////
+
+// Middle Button
+
+//////////////////////////////////////////////////////////////////
+  
+  if (middle) //Middle Button is Pressed
+  {
+    middle = false;
+   
+    if (page == 1 && menuitem==5) // Backlight Control 
+    {
+      if (backlight) 
+      {
+        backlight = false;
+        menuItem5 = "Light: OFF";
+        turnBacklightOff();
+        }
+      else 
+      {
+        backlight = true; 
+        menuItem5 = "Light: ON";
+        turnBacklightOn();
+       }
+    }
+
+    if(page == 1 && menuitem ==6)// Reset
+    {
+      resetDefaults();
+    }
+
+
+    else if (page == 1 && menuitem<=4) {
+      page=2;
+     }
+    else if (page == 2 ) 
+     {
+      page=1; 
+     }
+    else if (page == 3 && Remitem == 3) 
+     {
+      page=1; 
+     }
+    else if (page == 3 && Remitem ==2) 
+     {
+      page=4; 
+     }
+    else if (page == 4 && subitem <=6 && subitem >=1)
+     {
+      page=5;
+     }
+     else if (page == 3 && Remitem ==1) 
+     {
+      page=6; 
+     }
+     else if (page == 6 && subitemv <=6 && subitemv >=1)
+     {
+      page=7;
+     }
+
+     
+   }
+
+///////////////////////////////////////////////////////////////////
+  }
+
+
+
+  void drawMenu()
+  {
+    char key = keypads.getKey();
+  if (page==1) 
+  {    
+    display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(15, 0);
+    display.print("MAIN MENU");
+    display.drawFastHLine(0,10,83,BLACK);
+
+    if(menuitem==1 && frame ==1)
+    {   
+      displayMenuItem(menuItem1, 15,true);
+      displayMenuItem(menuItem2, 25,false);
+      displayMenuItem(menuItem3, 35,false);
+    }
+    else if(menuitem == 2 && frame == 1)
+    {
+      displayMenuItem(menuItem1, 15,false);
+      displayMenuItem(menuItem2, 25,true);
+      displayMenuItem(menuItem3, 35,false);
+    }
+    else if(menuitem == 3 && frame == 1)
+    {
+      displayMenuItem(menuItem1, 15,false);
+      displayMenuItem(menuItem2, 25,false);
+      displayMenuItem(menuItem3, 35,true);
+    }
+     else if(menuitem == 4 && frame == 2)
+    {
+      displayMenuItem(menuItem2, 15,false);
+      displayMenuItem(menuItem3, 25,false);
+      displayMenuItem(menuItem4, 35,true);
+    }
+
+      else if(menuitem == 3 && frame == 2)
+    {
+      displayMenuItem(menuItem2, 15,false);
+      displayMenuItem(menuItem3, 25,true);
+      displayMenuItem(menuItem4, 35,false);
+    }
+    else if(menuitem == 2 && frame == 2)
+    {
+      displayMenuItem(menuItem2, 15,true);
+      displayMenuItem(menuItem3, 25,false);
+      displayMenuItem(menuItem4, 35,false);
+    }
+    
+    else if(menuitem == 5 && frame == 3)
+    {
+      displayMenuItem(menuItem3, 15,false);
+      displayMenuItem(menuItem4, 25,false);
+      displayMenuItem(menuItem5, 35,true);
+    }
+
+    else if(menuitem == 6 && frame == 4)
+    {
+      displayMenuItem(menuItem4, 15,false);
+      displayMenuItem(menuItem5, 25,false);
+      displayMenuItem(menuItem6, 35,true);
+    }
+    
+      else if(menuitem == 5 && frame == 4)
+    {
+      displayMenuItem(menuItem4, 15,false);
+      displayMenuItem(menuItem5, 25,true);
+      displayMenuItem(menuItem6, 35,false);
+    }
+      else if(menuitem == 4 && frame == 4)
+    {
+      displayMenuItem(menuItem4, 15,true);
+      displayMenuItem(menuItem5, 25,false);
+      displayMenuItem(menuItem6, 35,false);
+    }
+    else if(menuitem == 3 && frame == 3)
+    {
+      displayMenuItem(menuItem3, 15,true);
+      displayMenuItem(menuItem4, 25,false);
+      displayMenuItem(menuItem5, 35,false);
+    }
+        
+    else if(menuitem == 4 && frame == 3)
+    {
+     displayMenuItem(menuItem3, 15,false);
+     displayMenuItem(menuItem4, 25,true);
+     displayMenuItem(menuItem5, 35,false);
+    }  
+     
+
+     
+    display.display();
+  }
+  else if (page==2 && menuitem == 1) 
+  {    
+   displayStringMenuPage(menuItem1, Date);
+  }
+
+  else if (page==2 && menuitem == 2) 
+  {
+   displayStringMenuPage(menuItem2, Date);
+  }
+   else if (page==2 && menuitem == 3) 
+  {
+   displayStringMenuPage(menuItem3, Time);
+  }
+  else if (page==2 && menuitem == 4) 
+  {  page=3;            
+      }
+  else if (page ==3){
+   
+    display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(15, 0);
+    display.print("REMINDER");
+    display.drawFastHLine(0,10,83,BLACK);
+ //Serial.println(Remitem);
+
+    if(Remitem == 1)
+    {   
+      displayMenuItem(menuItem21, 15,true);
+      displayMenuItem(menuItem22, 25,false);
+      displayMenuItem(menuItem23, 35,false);
+    }
+    else if(Remitem == 2)
+    {
+      displayMenuItem(menuItem21, 15,false);
+      displayMenuItem(menuItem22, 25,true);
+      displayMenuItem(menuItem23, 35,false);
+    
+    }
+    else if(Remitem == 3)
+    {
+      displayMenuItem(menuItem21, 15,false);
+      displayMenuItem(menuItem22, 25,false);
+      displayMenuItem(menuItem23, 35,true);
+    }
+    display.display();
+    }
+    else if (page == 3 && Remitem == 1){
+      page = 6;
+      }
+      else if (page == 6 && Remitem == 1 ){
+
+    display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(0, 0);
+    display.print("View Reminder");
+    display.drawFastHLine(0,10,83,BLACK);
+ //Serial.println(Remitem);
+     
+    if(subitemv == 1 && framev1 ==1)
+    {   
+      displayMenuItem(subItemv1, 15,true);
+      displayMenuItem(subItemv2, 25,false);
+      displayMenuItem(subItemv3, 35,false);
+    }
+    else if(subitemv == 2 && framev1 ==1 )
+    {
+      displayMenuItem(subItemv1, 15,false);
+      displayMenuItem(subItemv2, 25,true);
+      displayMenuItem(subItemv3, 35,false);
+    
+    }
+    else if(subitemv == 3 && framev1 ==1)
+    {
+      displayMenuItem(subItemv1, 15,false);
+      displayMenuItem(subItemv2, 25,false);
+      displayMenuItem(subItemv3, 35,true);
+    }
+    else if(subitemv == 4 && framev1 ==2)
+    {
+      displayMenuItem(subItemv2, 15,false);
+      displayMenuItem(subItemv3, 25,false);
+      displayMenuItem(subItemv4, 35,true);
+    }
+    else if(subitemv == 3 && framev1 ==2)
+    {
+      displayMenuItem(subItemv2, 15,false);
+      displayMenuItem(subItemv3, 25,true);
+      displayMenuItem(subItemv4, 35,false);
+    }
+    else if(subitemv == 2 && framev1 ==2)
+    {
+      displayMenuItem(subItemv2, 15,true);
+      displayMenuItem(subItemv3, 25,false);
+      displayMenuItem(subItemv4, 35,false);
+    }
+    else if(subitemv == 5 && framev1 ==3)
+    {
+      displayMenuItem(subItemv3, 15,false);
+      displayMenuItem(subItemv4, 25,false);
+      displayMenuItem(subItemv5, 35,true);
+    }
+    else if(subitemv == 3 && framev1 ==3)
+    {
+      displayMenuItem(subItemv3, 15,true);
+      displayMenuItem(subItemv4, 25,false);
+      displayMenuItem(subItemv5, 35,false);
+    }
+    else if(subitemv == 4 && framev1 ==3)
+    {
+      displayMenuItem(subItemv3, 15,false);
+      displayMenuItem(subItemv4, 25,true);
+      displayMenuItem(subItemv5, 35,false);
+    }
+    else if(subitemv == 6 && framev1 ==4)
+    {
+      displayMenuItem(subItemv4, 15,false);
+      displayMenuItem(subItemv5, 25,false);
+      displayMenuItem(subItemv6, 35,true);
+    }
+    else if(subitemv == 5 && framev1 ==4)
+    {
+      displayMenuItem(subItemv4, 15,false);
+      displayMenuItem(subItemv5, 25,true);
+      displayMenuItem(subItemv6, 35,false);
+    }
+    else if(subitemv == 4 && framev1 ==4)
+    {
+      displayMenuItem(subItemv4, 15,true);
+      displayMenuItem(subItemv5, 25,false);
+      displayMenuItem(subItemv6, 35,false);
+    }
+    
+    display.display();
+
+      }
+      else if (page == 6 && subitemv == 1 ){
+      page = 7;
+      }
+      else if (page == 7 )
+      {
+    if(subitemv == 1 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Meeting");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+        display.print(Time1);
+        display.setCursor(6, 42);
+        display.print(Date1);
+     Serial.print(count1);
+    }  
+    if(subitemv == 2 )
+    { display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Take Medicine");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+        display.print(Time2);
+        display.setCursor(6, 42);
+        display.print(Date2); 
+    }
+    if(subitemv == 3 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Meet Doctor");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+      display.print(Time3);
+      display.setCursor(6, 42);
+      display.print(Date3);
+    }
+    if(subitemv == 4 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Buy Groceries");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+        display.print(Time4);
+        display.setCursor(6, 42);
+        display.print(Date4);
+    }
+    if(subitemv == 5 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("wake up");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+      display.print(Time5);
+      display.setCursor(6, 42);
+      display.print(Date5);    
+    }
+    if(subitemv == 6 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Study");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      display.setCursor(6, 22);
+      display.print(Time6);
+      display.setCursor(6, 42);
+      display.print(Date6);
+    }
+    display.display();
+      }
+//////////////////////////////////////////////////////
+
+    
+    else if (page == 3 && Remitem == 2){
+      page = 4;
+      }
+    else if (page == 4 && Remitem == 2 ){
+
+    display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(0, 0);
+    display.print("Set Reminder");
+    display.drawFastHLine(0,10,83,BLACK);
+ //Serial.println(Remitem);
+     
+    if(subitem == 1 && frame1 ==1)
+    {   
+      displayMenuItem(subItem1, 15,true);
+      displayMenuItem(subItem2, 25,false);
+      displayMenuItem(subItem3, 35,false);
+    }
+    else if(subitem == 2 && frame1 ==1 )
+    {
+      displayMenuItem(subItem1, 15,false);
+      displayMenuItem(subItem2, 25,true);
+      displayMenuItem(subItem3, 35,false);
+    
+    }
+    else if(subitem == 3 && frame1 ==1)
+    {
+      displayMenuItem(subItem1, 15,false);
+      displayMenuItem(subItem2, 25,false);
+      displayMenuItem(subItem3, 35,true);
+    }
+    else if(subitem == 4 && frame1 ==2)
+    {
+      displayMenuItem(subItem2, 15,false);
+      displayMenuItem(subItem3, 25,false);
+      displayMenuItem(subItem4, 35,true);
+    }
+    else if(subitem == 3 && frame1 ==2)
+    {
+      displayMenuItem(subItem2, 15,false);
+      displayMenuItem(subItem3, 25,true);
+      displayMenuItem(subItem4, 35,false);
+    }
+    else if(subitem == 2 && frame1 ==2)
+    {
+      displayMenuItem(subItem2, 15,true);
+      displayMenuItem(subItem3, 25,false);
+      displayMenuItem(subItem4, 35,false);
+    }
+    else if(subitem == 5 && frame1 ==3)
+    {
+      displayMenuItem(subItem3, 15,false);
+      displayMenuItem(subItem4, 25,false);
+      displayMenuItem(subItem5, 35,true);
+    }
+    else if(subitem == 3 && frame1 ==3)
+    {
+      displayMenuItem(subItem3, 15,true);
+      displayMenuItem(subItem4, 25,false);
+      displayMenuItem(subItem5, 35,false);
+    }
+    else if(subitem == 4 && frame1 ==3)
+    {
+      displayMenuItem(subItem3, 15,false);
+      displayMenuItem(subItem4, 25,true);
+      displayMenuItem(subItem5, 35,false);
+    }
+    else if(subitem == 6 && frame1 ==4)
+    {
+      displayMenuItem(subItem4, 15,false);
+      displayMenuItem(subItem5, 25,false);
+      displayMenuItem(subItem6, 35,true);
+    }
+    else if(subitem == 5 && frame1 ==4)
+    {
+      displayMenuItem(subItem4, 15,false);
+      displayMenuItem(subItem5, 25,true);
+      displayMenuItem(subItem6, 35,false);
+    }
+    else if(subitem == 4 && frame1 ==4)
+    {
+      displayMenuItem(subItem4, 15,true);
+      displayMenuItem(subItem5, 25,false);
+      displayMenuItem(subItem6, 35,false);
+    }
+    
+    display.display();
+
+      }
+    else if (page == 4 && subitem == 1 ){
+      page = 5;
+      }
+      else if (page == 5 )
+      {
+    if(subitem == 1 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Meeting");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count1 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time1 = Time1 + String(key);
+        count1++;
+        }
+        if (count1 >3 && count1 <= 5){
+          m1 = m1 + String(key);
+          }
+        if (count1 ==2){
+          h1 = Time1;
+          Time1 = Time1 + ":";
+          count1++;
+          }
+       
+        else if (count1 ==5){
+          Time1 = Time1 + ":";
+          count1++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time1);
+        if (count1==8){
+          //Serial.print(Time1);
+          count1++;
+          
+          }
+        }
+        else if (count1 >8 && count1 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+        if (count1<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date1 = Date1 + String(key);
+        count1++;
+        }
+          
+          }
+      
+        if (count1 ==11){
+           Date1  = Date1 + ".";
+          count1++;
+          }
+        
+        else if (count1 ==14){
+          Date1 = Date1 + ".";
+          count1++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time1);
+        display.setCursor(6, 42);
+        display.print(Date1);
+    }
+    }
+    
+    
+    
+    if(subitem == 2 )
+    { display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Meeting");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count2 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time2 = Time2 + String(key);
+        count2++;
+        }
+      
+        if (count2 >3 && count2 <= 5){
+          m2 = m2 + String(key);
+          }
+        if (count2 ==2){
+          h2 = Time2;
+          Time2 = Time2 + ":";
+          count2++;
+          }
+       
+        else if (count2 ==5){
+          Time2 = Time2 + ":";
+          count2++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time2);
+        if (count2==8){
+          //Serial.print(Time1);
+          count2++;
+          
+          }
+        }
+        else if (count2 >8 && count2 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+      if (count2<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date2 = Date2 + String(key);
+        count2++;
+        }
+          
+          }
+        if (count2 ==11){
+           Date2  = Date2 + ".";
+          count2++;
+          }
+        
+        else if (count2 ==14){
+          Date2 = Date2 + ".";
+          count2++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time2);
+        display.setCursor(6, 42);
+        display.print(Date2);
+        
+    
+    }
+    }
+    if(subitem == 3 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Meet Doctor");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count3 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time3 = Time3 + String(key);
+        count3++;
+        }
+        if (count3 >3 && count3 <= 5){
+          m3 = m3 + String(key);
+          }
+        if (count3 ==2){
+          h3 = Time3;
+          Time3 = Time3 + ":";
+          count3++;
+          }
+       
+        else if (count3 ==5){
+          Time3 = Time3 + ":";
+          count3++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time3);
+        if (count3==8){
+          //Serial.print(Time1);
+          count3++;
+          
+          }
+        }
+        else if (count3 >8 && count3 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+      if (count3<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date3 = Date3 + String(key);
+        count3++;
+        }
+          
+          }
+        if (count3 ==11){
+           Date3  = Date3 + ".";
+          count3++;
+          }
+        
+        else if (count3 ==14){
+          Date3 = Date3 + ".";
+          count3++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time3);
+        display.setCursor(6, 42);
+        display.print(Date3);
+    }
+    }
+    if(subitem == 4 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Buy Groceries");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count4 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time4 = Time4 + String(key);
+        count4++;
+        }
+        if (count4 >3 && count4 <= 5){
+          m4 = m4 + String(key);
+          }
+        if (count4 ==2){
+          h4 = Time4;
+          Time4 = Time4 + ":";
+          count4++;
+          }
+       
+        else if (count4 ==5){
+          Time4 = Time4 + ":";
+          count4++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time4);
+        if (count4==8){
+          //Serial.print(Time1);
+          count4++;
+          
+          }
+        }
+        else if (count4 >8 && count4 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+      if (count4<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date4 = Date4 + String(key);
+        count4++;
+        }
+          
+          }
+        if (count4 ==11){
+           Date4  = Date4 + ".";
+          count4++;
+          }
+        
+        else if (count4 ==14){
+          Date4 = Date4 + ".";
+          count4++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time4);
+        display.setCursor(6, 42);
+        display.print(Date4);
+    }
+    }
+    if(subitem == 5 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("wake up");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count5 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time5 = Time5 + String(key);
+        count5++;
+        }
+        if (count5 >3 && count5 <= 5){
+          m5 = m5 + String(key);
+          }
+        if (count5 ==2){
+          h4 = Time5;
+          Time5 = Time5 + ":";
+          count5++;
+          }
+       
+        else if (count5 ==5){
+          Time5 = Time5 + ":";
+          count5++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time5);
+        if (count5==8){
+          //Serial.print(Time1);
+          count5++;
+          
+          }
+        }
+        else if (count5 >8 && count5 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+     if (count5<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date5 = Date5 + String(key);
+        count5++;
+        }
+          
+          }
+        if (count5 ==11){
+           Date5  = Date5 + ".";
+          count5++;
+          }
+        
+        else if (count5 ==14){
+          Date5 = Date5 + ".";
+          count5++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time5);
+        display.setCursor(6, 42);
+        display.print(Date5);
+    }
+    }
+    if(subitem == 6 )
+    {   
+      display.setTextSize(1);
+      display.clearDisplay();
+      display.setTextColor(BLACK, WHITE);
+      display.setCursor(1, 0);
+      display.print("Study");
+      display.drawFastHLine(0,10,83,BLACK);
+      display.setCursor(6, 12);
+      display.print("HH:MM:SS");
+      display.setCursor(6, 32);
+      display.print("DD.MM.YYYY");
+      
+      if (count6 <=8){
+        char key = keypads.getKey();
+      if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0') {
+        Time6 = Time6 + String(key);
+        count6++;
+        }
+        if (count6 >3 && count6 <= 5){
+          m6 = m6 + String(key);
+          }
+        if (count6 ==2){
+          h6 = Time6;
+          Time6 = Time6 + ":";
+          count6++;
+          }
+       
+        else if (count6 ==5){
+          Time6 = Time6 + ":";
+          count6++;
+          }
+        display.setCursor(6, 22);
+        display.print(Time6);
+        if (count6==8){
+          //Serial.print(Time1);
+          count6++;
+          
+          }
+        }
+        else if (count6 >8 && count6 <= 19){
+      //Serial.print(count1);
+        char key = keypads.getKey();
+      if (count6<19){
+          if (key == '1' or key == '2' or key == '3' or key == '4' or key == '5' or key == '6' or key == '7' or key == '8' or key == '9' or key == '0'){
+        Date6 = Date6 + String(key);
+        count6++;
+        }
+          
+          }
+        if (count6 ==11){
+           Date6  = Date6 + ".";
+          count6++;
+          }
+        
+        else if (count6 ==14){
+          Date6 = Date6 + ".";
+          count6++;
+          }
+         
+        display.setCursor(6, 22);
+        display.print(Time6);
+        display.setCursor(6, 42);
+        display.print(Date6);
+    }
+    }
+
+    
+    display.display();
+      }
+  
+  
+  
+  }
+
+  void resetDefaults()
+  {
+    
+    selectedReminder = 0;
+    //setContrast();
+    backlight = true;
+    menuItem5 = "Light: ON";
+    turnBacklightOn();
+     count1=0;
+     count2=0;
+     count3=0;
+     count4=0;
+     count5=0;
+     count6=0;
+     Date1 = "";
+     Date2 = "";
+     Date3 = "";
+     Date4 = "";
+     Date5 = "";
+     Date6 = "";
+
+//Times
+     Time1 = "";
+     Time2 = "";
+     Time3 = "";
+     Time4 = "";
+     Time5 = "";
+     Time6 = "";
+     h1 = "";
+     m1= "";
+     h2= "";
+     m2= "";
+     h3= "";
+     m3= "";
+     h4= "";
+     m4= "";
+     h5= "";
+     m5= "";
+     h6 = "";
+     m6= "";
+    
+  }
+
+  /*void setContrast()
+ {
+   display.setContrast(contrast);
+    display.display();
+  }*/
+
+  void turnBacklightOn()
+  {
+    digitalWrite(7,LOW);
+  }
+
+    void turnBacklightOff()
+  {
+    digitalWrite(7,HIGH);
+  }
+
+  void timerIsr() {
+ // encoder->service();
+}
+
+
+
+// String Menu Print
+
+
+void displayStringMenuPage(String menuItem, String value)   //String SubMenu
+{
+    display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextColor(BLACK, WHITE);
+    display.setCursor(15, 0);
+    display.print(menuItem);
+    display.drawFastHLine(0,10,83,BLACK);
+    display.setTextSize(1);
+    display.setCursor(5, 25);
+     if (menuItem == menuItem1){
+      display.setCursor(5, 15);
+      display.println("   WAKEY \nThe weekly \nTask alerting \nSystem ");
+      //display.clearDisplay();
+     // display.setCursor(5, 15);
+      //display.println(millis());
+
+      
+ 
+ 
+      
+ 
+     //delay(1000); 
+            //Display Date under the Date Submenu
+    }
+    if (menuItem == menuItem2){
+      display.println(rtc.getDateStr());
+
+      
+ 
+ 
+      
+ 
+    // delay(1000); 
+            //Display Date under the Date Submenu
+    }
+    else if (menuItem == menuItem3){
+      display.println(rtc.getTimeStr());
+      //delay(1000); 
+             //Display Time under the Time Submenu
+    }
+    
+     
+    display.setTextSize(1);
+    display.display();
+}
+
+//Sub menu print
+
+
+
+
+
+//Menu Selection
+void displayMenuItem(String item, int position, boolean selected)
+{
+    if(selected)
+    {
+      display.setTextColor(WHITE, BLACK);
+    }else
+    {
+      display.setTextColor(BLACK, WHITE);
+    }
+    display.setCursor(0, position);
+    display.print(">"+item);
+}
+
+void Welcome()
+  {
+  display.setTextSize(2);
+    display.clearDisplay();
+   display.setCursor(10,10);
+   display.print("WAKEY");
+  display.display();
+  digitalWrite(7,HIGH);
+  delay(3000);
+  digitalWrite(7,LOW);
+  display.clearDisplay();
+  }
